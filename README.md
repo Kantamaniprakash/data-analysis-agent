@@ -152,4 +152,4 @@ data-analysis-agent/
 ## Author
 
 **Satya Sai Prakash Kantamani** — Data Scientist
-[GitHub](https://github.com/kantamaniprakash) · [LinkedIn](https://www.linkedin.com/in/satya-sai-prakash-kantamani) · [Email](mailto:satyasai.kantamani@gmail.com)
+[GitHub](https://github.com/kantamaniprakash) · [LinkedIn](https://www.linkedin.com/in/prakash-kantamani) · [Email](mailto:satyasai.kantamani@gmail.com)
