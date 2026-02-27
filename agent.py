@@ -1,6 +1,6 @@
 """
-FAANG-Level Data Analysis Agent
-=================================
+Data Analysis Agent
+===================
 An autonomous LLM agent that analyzes datasets using natural language.
 Built with LangChain, Streamlit, Plotly, and advanced ML/statistics tooling.
 
@@ -69,7 +69,7 @@ except ImportError:
 
 # ── Page Config ────────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="FAANG-Level Data Analysis Agent",
+    page_title="Data Analysis Agent",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
