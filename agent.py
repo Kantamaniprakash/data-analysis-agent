@@ -113,6 +113,11 @@ SAFE_BUILTINS = {
 }
 
 def safe_exec(code: str) -> str:
+    # SECURITY NOTE: restricting __builtins__ below is NOT a real security
+    # sandbox — exec() with a filtered builtins dict is trivially escapable
+    # (e.g. via object.__subclasses__ or attribute chains on allowed objects).
+    # It only guards against accidental misuse by LLM-generated code. For
+    # untrusted input, run this code in an isolated subprocess or container.
     df = _df()
     if df is None:
         return "No dataset loaded."

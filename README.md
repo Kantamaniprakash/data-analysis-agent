@@ -2,6 +2,8 @@
 
 > An autonomous LLM-powered agent that understands natural language, performs rigorous statistical analysis, builds ML models, generates interactive visualizations, and delivers actionable business insights — all in a conversational interface.
 
+![CI](https://github.com/Kantamaniprakash/data-analysis-agent/actions/workflows/ci.yml/badge.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
 ![LangChain](https://img.shields.io/badge/LangChain-0.3+-green?style=flat-square)
 ![Anthropic](https://img.shields.io/badge/Anthropic-Claude-blueviolet?style=flat-square)
@@ -67,7 +69,9 @@ User: "Is there a significant difference in sales across regions?"
 | Machine Learning| scikit-learn, XGBoost                               |
 | Visualization   | Plotly (interactive), Matplotlib, Seaborn            |
 | UI              | Streamlit                                           |
-| Code Execution  | Sandboxed Python exec() with safe builtins          |
+| Code Execution  | Python exec() with restricted builtins (see security note below) |
+
+> **Security note:** the restricted-builtins `exec()` used for code execution is **not a real security sandbox** — a filtered `__builtins__` dict is trivially escapable by determined code. It only guards against accidental misuse by LLM-generated code. If you run this app with untrusted users or untrusted input, execute the generated code in an isolated subprocess or container instead.
 
 ---
 
@@ -75,7 +79,7 @@ User: "Is there a significant difference in sales across regions?"
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/kantamaniprakash/data-analysis-agent.git
+git clone https://github.com/Kantamaniprakash/data-analysis-agent.git
 cd data-analysis-agent
 ```
 
@@ -118,6 +122,11 @@ streamlit run agent.py
 data-analysis-agent/
 ├── agent.py            # Main Streamlit app + LangChain agent + all 7 tools
 ├── requirements.txt    # Python dependencies
+├── tests/
+│   └── test_smoke.py   # Smoke tests (files exist, source parses)
+├── .env.example        # Template for required environment variables
+├── .github/            # CI workflow + Dependabot config
+├── LICENSE
 └── README.md
 ```
 
