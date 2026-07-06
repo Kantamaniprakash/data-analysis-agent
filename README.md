@@ -9,6 +9,9 @@
 ![Anthropic](https://img.shields.io/badge/Anthropic-Claude-blueviolet?style=flat-square)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.38+-red?style=flat-square)
 
+![Data Analysis Agent Streamlit UI: sidebar with API key entry and dataset upload, capability table and example prompts in the main panel](docs/screenshot.png)
+*The landing UI — enter an Anthropic API key in the sidebar, upload a CSV/Excel/JSON file, and ask questions in plain English.*
+
 ---
 
 ## Overview
@@ -84,13 +87,20 @@ cd data-analysis-agent
 ```
 
 ### 2. Install dependencies
+
+With [uv](https://docs.astral.sh/uv/) (recommended — reproducible via the committed `uv.lock`):
+```bash
+uv sync --locked
+```
+
+Or with pip:
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 3. Run the app
 ```bash
-streamlit run agent.py
+uv run streamlit run agent.py   # or: streamlit run agent.py
 ```
 
 ### 4. Enter your API key in the sidebar and upload a dataset
@@ -121,9 +131,13 @@ streamlit run agent.py
 ```
 data-analysis-agent/
 ├── agent.py            # Main Streamlit app + LangChain agent + all 7 tools
-├── requirements.txt    # Python dependencies
+├── pyproject.toml      # Project metadata + dependencies (PEP 621)
+├── uv.lock             # Locked, reproducible dependency resolution
+├── requirements.txt    # Pip-compatible dependency floors
 ├── tests/
 │   └── test_smoke.py   # Smoke tests (files exist, source parses)
+├── docs/
+│   └── screenshot.png  # Landing UI screenshot
 ├── .env.example        # Template for required environment variables
 ├── .github/            # CI workflow + Dependabot config
 ├── LICENSE
@@ -164,13 +178,25 @@ data-analysis-agent/
 
 ---
 
-## Results & Capabilities
+## Results & Limitations
 
-- **Handles datasets up to ~500K rows** efficiently with pandas
-- **Interactive Plotly visualizations** with dark theme, hover data, and zoom
-- **Zero code required** from the user — plain English only
-- **Iterative refinement** — ask follow-up questions naturally with conversation memory
-- **Rigorous statistical methodology** — assumption checking, effect sizes, and plain-English interpretation
+### What is verified
+
+- **CI-tested on Python 3.10 / 3.11 / 3.12** — every push runs the smoke test suite (source parses, key files present, `safe_exec` defined) via GitHub Actions.
+- **The UI loads without an API key** — the screenshot above is captured from a real headless run of the app; the key is only required once you start an analysis.
+- **Statistical outputs are computed, not generated** — p-values, effect sizes, CV scores, and forecasts come from SciPy / statsmodels / scikit-learn, and the LLM only orchestrates and interprets them.
+
+### What is *not* measured
+
+There is no committed benchmark of answer quality: the agent's analysis plans and interpretations depend on the underlying LLM, and no accuracy/eval harness ships with this repo. The "~500K rows" figure sometimes quoted for pandas workloads is a practical guideline, not a measured limit of this app.
+
+### Limitations
+
+- **No answer-quality benchmark** — analysis correctness ultimately depends on the LLM's tool choices; results should be reviewed before driving business decisions.
+- **Not a security sandbox** — generated code runs via `exec()` with restricted builtins, which is escapable by determined code (see the security note above). Do not expose the app to untrusted users.
+- **Single-machine, in-memory only** — datasets must fit in RAM as a pandas DataFrame; there is no chunking, sampling fallback, or distributed backend.
+- **LLM API cost and latency** — every question triggers one or more Claude calls plus tool round-trips; long multi-turn sessions consume tokens accordingly.
+- **Conversation memory is session-scoped** — refreshing the Streamlit page clears the chat and any in-memory state.
 
 ---
 
